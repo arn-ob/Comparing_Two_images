@@ -15,7 +15,7 @@ public class image_read {
     public void read() throws Exception {
 
             // This will load the MySQL driver, each DB has its own driver
-            // Class.forName("com.mysql.jdbc.Driver");
+            // Class.forName("com.mysql.jdbc.Driver");  // Prevously use
             // Setup the connection with the DB
             connect = DriverManager.getConnection("jdbc:mysql://localhost/image?"
                                                         + "user=root&password=");
@@ -23,19 +23,20 @@ public class image_read {
             // Statements allow to issue SQL queries to the database
             statement = connect.createStatement();
             // Result set get the result of the SQL query
-            resultSet = statement
-                    .executeQuery("select * from image.person");
+            resultSet = statement.executeQuery("select * from image.person");
             writeResultSet(resultSet);
 
 
     }
+
+    // Process data after extract
     private void writeResultSet(ResultSet resultSet) throws SQLException, IOException {
         // ResultSet is initially before the first data set
         while (resultSet.next()) {
 
             InputStream in = resultSet.getBinaryStream(4);
 
-            // Data Processing
+            // Data Processing after getting image file from database
             byte[] buff = new byte[8000];
             int bytesRead = 0;
             ByteArrayOutputStream bao = new ByteArrayOutputStream();
@@ -44,13 +45,11 @@ public class image_read {
             }
             byte[] data = bao.toByteArray();
             ByteArrayInputStream bin = new ByteArrayInputStream(data);
+
+            // transfer the local to global var
             binImage = bin;
             System.out.println(bin);
         }
 
     }
-
-//    public InputStream image(){
-//        return imgStream;
-//    }
 }
